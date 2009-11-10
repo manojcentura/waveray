@@ -1,7 +1,7 @@
-Nh = 499;
+Nh = 49;
 h = 1/(Nh+1);
 eh = ones(Nh,1);
-k0 = 10*pi;
+k0 = 2*pi;
 A = 1/h^2 * spdiags([-eh 2*eh -eh], -1:1, Nh, Nh) - k0^2 * spdiags(eh, 0, Nh, Nh);
 % f = rand(Nh,1);
 hmesh = (h:h:1-h)';
@@ -16,7 +16,7 @@ Linv = inv(L);
 x = rand(Nh,1);
 maxiter = 1000000;
 err = zeros(maxiter,1);
-H = pi/3.5/k0;
+H = 2/k0;
 NH = round(1 / H);
 H = 1/(NH+1);
 Hmesh = (H:H:1-H)';
@@ -57,7 +57,7 @@ for i = 1 : maxiter
       vpH = Lhatpinv * (gpH - Uhatp * vpH);
     end
     vph = interp1( [0;Hmesh;1], [0;vpH;0], hmesh, 'linear' );
-    vph = zeros(size(vph));
+    % vph = zeros(size(vph));
 
     rmh = (f - A*x) .* exp(1i*k0*hmesh);
     rmH = interp1( [0;hmesh;1], [0;rmh;0], Hmesh, 'linear');
@@ -71,17 +71,17 @@ for i = 1 : maxiter
       vmH = Lhatminv * (gmH - Uhatm * vmH);
     end
     vmh = interp1( [0;Hmesh;1], [0;vmH;0], hmesh, 'linear' );
-    vmh = zeros(size(vmh));
+    % vmh = zeros(size(vmh));
 
 
     x = x + vph .* exp(1i*k0*hmesh) + vmh .* exp(-1i*k0*hmesh);
     % 
     % x = x + vph .* exp(1i*k0*hmesh);
 
-    % plot( Hmesh, real(vpH) )
-    % pause
-    % plot( Hmesh, real(vmH) )
-    % pause
+    plot( Hmesh, real(vpH) )
+    pause
+    plot( Hmesh, real(vmH) )
+    pause
     plot(abs(x-xstar))
     pause  
   end
